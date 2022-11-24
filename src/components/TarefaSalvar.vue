@@ -2,15 +2,17 @@
     <div class="mt-4">
         <hr>
         <h2 class="font-weight-light">Salvar Tarefa</h2>
-        <form>
+        <form @submit.prevent="salvar">
             <div class="row">
                 <div :class="classeColuna">
                     <div class="form-group">
                         <label>Título</label>
-                        <input 
-                            type="text"
-                            class="form-control" 
-                            placeholder="Título da tarefa">
+                        <input
+                          class="form-control"
+                          placeholder="Título da tarefa"
+                          type="text"
+                          v-model="tarefaLocal.titulo"
+                        >
                     </div>
                 </div>
                 <div class="col-sm-2" v-if="tarefa">
@@ -29,6 +31,8 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
+
 export default {
     props: {
         tarefa: {
@@ -49,6 +53,12 @@ export default {
             return this.tarefa 
                 ? 'col-sm-10'
                 : 'col-sm-12'
+        }
+    },
+    methods: {
+        salvar(event) {
+            this.$emit('criar', this.tarefaLocal)
+            this.tarefaLocal = { titulo: '', concluido: false }
         }
     }
 }
