@@ -2,7 +2,12 @@
     <li class="list-group-item d-flex">
         <span>{{ tarefa.titulo }}</span>
         <span class="espacar"></span>
-        <button class="btn btn-sm mr-4" :class="classeCSS" :title="tituloBotaoConcluido">
+        <button
+          :class="classeCSS"
+          :title="tituloBotaoConcluido"
+          class="btn btn-sm mr-4"
+          @click="concluirTarefa"
+        >
             <i class="fa fa-check"></i>
         </button>
         <button
@@ -41,6 +46,11 @@ export default {
             return this.tarefa.concluido
                 ? 'Refazer Tarefa'
                 : 'Concluir Tarefa'
+        }
+    },
+    methods:{
+        concluirTarefa() {
+            this.$emit('concluir', Object.assign({}, this.tarefa, { concluido: !this.tarefa.concluido }))
         }
     }
 }
