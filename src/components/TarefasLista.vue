@@ -28,7 +28,9 @@
             />
         </ul>
 
-        <p v-else>Nenhuma tarefa criada.</p>
+        <p v-else-if="!mensagemErro">Nenhuma tarefa criada.</p>
+
+        <div class="alert alert-danger" v-else>{{ mensagemErro }}</div>
 
         <TarefaSalvar
           v-if="exibirFormulario"
@@ -58,12 +60,13 @@ export default {
         return {
             tarefas: [],
             exibirFormulario: false,
-            tarefaSelecionada: undefined
+            tarefaSelecionada: undefined,
+            mensagemErro: undefined
         }
     },
     computed: {
         tarefasOrdenadas() {
-            return this.tarefas.sort((t1, t2) => {
+            return this.tarefas.slice().sort((t1, t2) => {
                 if (t1.concluido === t2.concluido) {
                     return t1.titulo < t2.titulo 
                     ? -1
@@ -80,12 +83,46 @@ export default {
             .then((response) => {
                 console.log('GET /tarefas', response)
                 this.tarefas = response.data
+                return 'Axios'
+            }, error => {
+                console.log('Erro capturado no then: ', error)
+                return Promise.reject(error)
+            }).catch(error => {
+                console.log('Erro capturado no catch: ', error)
+                if (error.response) {
+                    this.mensagemErro = `Servidor retornou um erro ${error.message} ${error.response.statusText}`
+                    console.log('Erro [resposta]: ', error.response)
+                } else if (error.request) {
+                    this.mensagemErro = `Erro ao tentar comunicar com o servidor: ${error.message}`
+                    console.log('Erro [requisição]: ', error.request)
+                } else {
+                    this.mensagemErro = `Erro ao fazer requisição ao servidor ${error.message}`
+                }
+                return 'Curso VueJs'
+            }).then((algumParametro) => {
+                console.log('Sempre executado!', algumParametro)
             })
     },
     methods: {
         criarTarefa(tarefa) {
-            axios.post(`${config.apiURL}/tarefas`, tarefa)
+            /*axios.post(`${config.apiURL}/tarefas`, tarefa)
                 .then((response) => {
+                    console.log('POST /tarefas', response)
+                    this.tarefas.push(response.data)
+                    this.resetar()
+                })
+
+                axios.get('', {})
+                axios.post('', {}, {})
+                axios.put('', {}, {})
+                axios.delete('', {})*/
+
+               axios.request({
+                    method: 'post',
+                    baseURL: config.apiURL,
+                    url: `/tarefas`,
+                    data: tarefa
+               }).then((response) => {
                     console.log('POST /tarefas', response)
                     this.tarefas.push(response.data)
                     this.resetar()
