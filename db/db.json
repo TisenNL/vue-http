@@ -3,7 +3,8 @@
     {
       "id": 1,
       "titulo": "Aprender JavaScript",
-      "concluido": false
+      "concluido": true,
+      "curso": "Vue JS"
     },
     {
       "id": 2,
@@ -17,12 +18,12 @@
     },
     {
       "titulo": "Aprender Vuex",
-      "concluido": false,
+      "concluido": true,
       "id": 4
     },
     {
       "titulo": "Aprender Vue Router",
-      "concluido": false,
+      "concluido": true,
       "id": 5
     }
   ]
